@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Selamat Ulang Tahun ❤️</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg: #fff6fb;
+      --pink-1: #ffd7e9;
+      --pink-2: #ffb3d1;
+      --accent: #ff6fa3;
+      --muted: #9b6b7a;
+      --glass: rgba(255,255,255,0.6);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;min-height:100vh;display:flex;align-items:flex-start;justify-content:center;
+      font-family:Poppins,system-ui,Segoe UI,Roboto,Arial; background: radial-gradient(circle at 10% 10%,#fff0f6 0%, var(--bg) 30%), linear-gradient(180deg,#fff 0%,#ffeef8 100%);
+      color:#5b2a3a;
+      overflow-x:hidden;
+    }
+    .card{
+      width:min(920px,95%); max-width:920px; background:linear-gradient(180deg,var(--glass),rgba(255,255,255,0.45)); backdrop-filter: blur(6px);
+      border-radius:24px; padding:28px; box-shadow:0 10px 40px rgba(230,130,190,0.18); position:relative; overflow:hidden;
+      display:grid; grid-template-columns: 1fr 360px; gap:20px; align-items:start; margin:40px 0;
+    }
+    @media (max-width:820px){ 
+      .card{ grid-template-columns:1fr; padding:20px; margin:20px 0 } 
+      .side{ order:-1 } 
+    }
+
+    .left h1{ font-family:Pacifico, cursive; font-size:40px; margin:0 0 8px; color:var(--accent); text-shadow:0 2px 0 rgba(255,255,255,0.4)}
+    .left p.lead{ margin:0 0 18px; font-size:16px; color:#6f3c4b }
+    .typewriter{ font-weight:600; font-size:20px; min-height:26px }
+
+    .actions{ display:flex; flex-wrap:wrap; gap:12px; margin-top:16px }
+    .btn{ padding:12px 16px; border-radius:12px; border:0; font-weight:600; cursor:pointer; box-shadow:0 6px 18px rgba(200,100,150,0.12); transition:transform .18s ease, box-shadow .18s ease; flex:1 1 auto; text-align:center }
+    .btn:active{ transform:translateY(2px) }
+    .btn.play{ background:linear-gradient(90deg,var(--pink-1),var(--pink-2)); color:#6f2740 }
+    .btn.surprise{ background:linear-gradient(90deg,#ff8fb6,#ff6fa3); color:white }
+    .btn.ghost{ background:transparent; border:1px solid rgba(107,35,64,0.08); color:var(--muted) }
+    .btn:hover{ transform:translateY(-4px); box-shadow:0 14px 30px rgba(200,100,150,0.18) }
+
+    .side{ background:linear-gradient(180deg,#fff0f8,rgba(255,255,255,0.5)); border-radius:18px; padding:18px; display:flex; flex-direction:column; gap:12px; align-items:center }
+
+    .avatar{  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden; /* supaya foto bulat */
+  box-shadow: 0 8px 30px rgba(230,150,190,0.12); }
+
+  .avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* foto penuh tanpa distorsi */
+  display: block;
+}
+    .note{ font-size:14px; text-align:center; color:#6f3c4b }
+
+    /* Modal */
+    .overlay{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:80; overflow:auto; padding:20px }
+    .overlay.show{ display:flex }
+    .modal{ width:min(720px,92%); background:linear-gradient(180deg,#fff,#fff6fb); border-radius:18px; padding:22px; box-shadow:0 30px 80px rgba(180,80,140,0.18); text-align:center }
+    .modal h2{ margin:0 0 8px; font-family:Pacifico; color:var(--accent) }
+    .modal p{ margin:0 0 16px }
+
+    /* Floating hearts */
+    .heart{ position:absolute; bottom:-40px; width:26px; height:26px; transform:rotate(-45deg); background:var(--accent); left:50%; opacity:.95 }
+    .heart::before,.heart::after{ content:''; position:absolute; width:26px; height:26px; background:var(--accent); border-radius:50% }
+    .heart::before{ top:-13px; left:0 }
+    .heart::after{ left:13px; top:0 }
+
+    /* small cute details */
+    .sparkle{ position:absolute; width:8px; height:8px; border-radius:2px; background:#fff; opacity:.9 }
+
+    footer{ position:relative; margin-top:14px; color:#7a4a5d; font-size:13px }
+
+    /* confetti canvas occupies full screen but pointer-events none */
+    canvas.confetti{ position:fixed; inset:0; z-index:30; pointer-events:none }
+
+  </style>
+</head>
+<body>
+  <div class="card" role="main" aria-labelledby="title">
+    <div class="left">
+      <h1 id="title">Selamat Ulang Tahun Ay✨</h1>
+      <p class="lead">Semoga hari-hari kamu penuh tawa, kebahagiaan, dan semua hal manis yang kamu suka.</p>
+<audio id="bgMusic" src="media/ultah.mp3" loop></audio>
+
+      <div class="typewriter" id="typewriter" aria-live="polite"></div>
+
+      <div class="actions">
+        <button class="btn play" id="playMusic">▶ Putar Musik</button>
+        <button class="btn surprise" id="surpriseBtn">Klik untuk lihat pesan</button>
+        <button class="btn ghost" id="toggleHearts">Hati Mengambang</button>
+      </div>
+
+      <footer>
+        <small>Tip: klik "Klik untuk lihat pesan" untuk membuka pesan🎉</small>
+      </footer>
+    </div>
+
+    <aside class="side">
+      <div class="avatar"><img src="media/cika.jpg"></div>
+      <div class="note">Untuk: <strong>Siska Amalia Septiani Musa</strong><br><small>dariku yang selalu mengagumimu</small></div>
+      <div style="display:flex; gap:8px; margin-top:auto; flex-wrap:wrap; justify-content:center">
+        <button class="btn ghost" id="shareBtn">Simpan / Share</button>
+      </div>
+    </aside>
+  </div>
+
+  <!-- overlay modal -->
+  <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal" id="modal">
+      <h2 id="modalTitle">Happy Birthdayy💕</h2>
+      <p id="modalMsg">“si cantik nan gemesh 🎀✨ Semoga di umur baru ini kamu selalu dilimpahi kesehatan, rezeki yang berkah, dipermudah segala urusanmu, dan didekatkan dengan kebahagiaan tanpa henti. Semoga mimpi-mimpi manismu bisa tercapai satu per satu, Wish you all the best pokoknya. 🎂🐰”</p>
+      <div style="margin-top:16px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap">
+        <button class="btn surprise" id="closeModal">Tutup🤗</button>
+      </div>
+    </div>
+  </div>
+
+  <canvas class="confetti" id="confettiCanvas" aria-hidden="true"></canvas>
+
+  <script>
+    // ---------- Typewriter ----------
+    const messages = [
+      'Happy level up day.',
+      'Congrats on becoming a year older.',
+      'Have a fabulous birthday ♥'
+    ];
+    const typeEl = document.getElementById('typewriter');
+    let msgIdx = 0;
+    function typeLoop(){
+      const txt = messages[msgIdx];
+      let i=0; typeEl.textContent = '';
+      const t = setInterval(()=>{
+        typeEl.textContent += txt.charAt(i);
+        i++;
+        if(i>txt.length){ clearInterval(t); setTimeout(()=>{ msgIdx=(msgIdx+1)%messages.length; typeLoop() }, 1800) }
+      }, 50)
+    }
+    typeLoop();
+
+    // ---------- Floating hearts ----------
+    let heartsOn = false;
+    const heartIntervalRefs = [];
+    function makeHeart(){
+      const h = document.createElement('div'); h.className='heart';
+      const size = Math.random()*30 + 18; h.style.width = size+'px'; h.style.height = size+'px';
+      h.style.left = Math.random()*90 + '%';
+      h.style.bottom = '-30px';
+      h.style.background = '';
+      h.style.transform = 'rotate(-45deg) scale('+ (0.6 + Math.random()*1.0) +')';
+      h.style.opacity = (0.6 + Math.random()*0.4);
+      // random gradient
+      const c1 = ['#ff8fb6','#ffc4dd','#ff6fa3'][Math.floor(Math.random()*3)];
+      const c2 = ['#ffd7e9','#ffb3d1','#ffd0e8'][Math.floor(Math.random()*3)];
+      h.style.background = `linear-gradient(135deg, ${c1}, ${c2})`;
+      document.body.appendChild(h);
+      const rise = 350 + Math.random()*240;
+      const duration = 5000 + Math.random()*4000;
+      h.animate([
+        { transform: h.style.transform + ' translateY(0) rotate(-45deg)', opacity: h.style.opacity },
+        { transform: h.style.transform + ' translateY(-'+rise+'px) rotate(-25deg)', opacity: 0 }
+      ],{duration, easing:'cubic-bezier(.2,.8,.2,1)'}).onfinish = ()=>{ h.remove() };
+    }
+    document.getElementById('toggleHearts').addEventListener('click',()=>{
+      heartsOn = !heartsOn; document.getElementById('toggleHearts').textContent = heartsOn ? 'Matikan Hati' : 'Hati Mengambang';
+      if(heartsOn){
+        const id = setInterval(makeHeart, 700); heartIntervalRefs.push(id);
+      } else { while(heartIntervalRefs.length){ clearInterval(heartIntervalRefs.pop()) } }
+    });
+
+    // ---------- Confetti (canvas) ----------
+    const canvas = document.getElementById('confettiCanvas'); const ctx = canvas.getContext('2d');
+    function resize(){ canvas.width = innerWidth; canvas.height = innerHeight }
+    resize(); window.addEventListener('resize', resize);
+
+    function launchConfetti(){
+      const confetti = [];
+      const colors = ['#ffb3d1','#ffd7e9','#ff8fb6','#fff3f8','#ff6fa3'];
+      for(let i=0;i<140;i++){
+        confetti.push({ x: Math.random()*canvas.width, y: -Math.random()*canvas.height, w: 6+Math.random()*8, h: 8+Math.random()*8, vx: -2+Math.random()*4, vy: 2+Math.random()*6, rot: Math.random()*360, vr: -6+Math.random()*12, color: colors[Math.floor(Math.random()*colors.length)], life: 0 });
+      }
+      let running = true;
+      function frame(){ if(!running) return; ctx.clearRect(0,0,canvas.width,canvas.height); for(const c of confetti){ c.x += c.vx; c.y += c.vy; c.vy += 0.06; c.rot += c.vr; c.life += 1; ctx.save(); ctx.translate(c.x,c.y); ctx.rotate(c.rot*Math.PI/180); ctx.fillStyle = c.color; ctx.fillRect(-c.w/2, -c.h/2, c.w, c.h); ctx.restore(); }
+        requestAnimationFrame(frame);
+      }
+      frame();
+      // stop after 4s
+      setTimeout(()=>{ running=false; ctx.clearRect(0,0,canvas.width,canvas.height) }, 4200);
+    }
+
+    // ---------- Modal / Surprise ----------
+    const overlay = document.getElementById('overlay');
+    const surpriseBtn = document.getElementById('surpriseBtn');
+    surpriseBtn.addEventListener('click', ()=>{
+      overlay.classList.add('show');
+      launchConfetti();
+      // small burst of hearts
+      for(let i=0;i<8;i++) setTimeout(makeHeart, i*150);
+      playMelody();
+    });
+    document.getElementById('closeModal').addEventListener('click', ()=>{ overlay.classList.remove('show'); });
+    overlay.addEventListener('click', (e)=>{ if(e.target===overlay) overlay.classList.remove('show') });
+
+    // ---------- WebAudio: simple melody (no external file) ----------
+    const AudioCtx = window.AudioContext || window.webkitAudioContext; let audioCtx = null;
+    function ensureCtx(){ if(!audioCtx) audioCtx = new AudioCtx(); }
+    function playTone(freq, t, when=0){ ensureCtx(); const o = audioCtx.createOscillator(); const g = audioCtx.createGain(); o.type='sine'; o.frequency.value = freq; g.gain.value = 0.0001; o.connect(g); g.connect(audioCtx.destination); o.start(audioCtx.currentTime + when); g.gain.exponentialRampToValueAtTime(0.12, audioCtx.currentTime+when+0.02); g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime+when+t); o.stop(audioCtx.currentTime+when+t+0.02); }
+    function playMelody(){ ensureCtx(); const notes = [440, 523.25, 659.25, 880]; let time=0; for(let i=0;i<notes.length;i++){ playTone(notes[i], 0.28, time); time += 0.28; } }
+
+    const music = document.getElementById('bgMusic');
+    document.getElementById('playMusic').addEventListener('click', ()=>{
+        if (music.paused) {
+          music.play();
+          document.getElementById('playMusic').textContent = 'Pause Musik ⏸';
+        } else {
+          music.pause();
+          document.getElementById('playMusic').textContent = 'Putar Musik ▶';
+        }
+      });
+
+
+    // ---------- Share / Save (screenshot) ----------
+    document.getElementById('shareBtn').addEventListener('click', async ()=>{
+      // try Web Share API first
+      try{
+        const data = new Blob([document.documentElement.outerHTML], {type:'text/html'});
+        const file = new File([data], 'ucapan-ulang-tahun.html', {type:'text/html'});
+        if(navigator.share){ await navigator.share({ files:[file], title:'Ucapan Ulang Tahun', text:'Untuk kamu ❤️' }); return; }
+      }catch(e){ /* ignore */ }
+      // fallback: copy HTML to clipboard
+      try{ await navigator.clipboard.writeText(document.documentElement.outerHTML); alert('HTML disalin ke clipboard. Kamu bisa paste dan simpan sebagai .html'); }catch(e){ alert('Maaf, tidak bisa otomatis. Silakan seleksi seluruh halaman dan salin manual.') }
+    });
+
+    // Accessibility: focus trap inside modal when open
+    document.addEventListener('keydown', (e)=>{
+      if(e.key==='Escape') overlay.classList.remove('show');
+    });
+
+    // small decorative sparkles
+    ;(function makeSparkles(){
+      for(let i=0;i<12;i++){
+        const s = document.createElement('div'); s.className='sparkle'; s.style.left = Math.random()*95+'%'; s.style.top = Math.random()*90+'%'; s.style.transform = 'scale('+(0.5+Math.random()*1.2)+')'; s.style.opacity = 0.8*Math.random(); document.body.appendChild(s);
+      }
+    })();
+
+  </script>
+</body>
+</html>
